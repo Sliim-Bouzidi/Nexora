@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             enableSystem
             disableTransitionOnChange
           >
-            <Providers>{children}</Providers>
+            <Providers activeThemeValue={themeToApply}>{children}</Providers>
             <Toaster />
           </ThemeProvider>
         </NuqsAdapter>

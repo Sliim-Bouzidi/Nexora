@@ -5,10 +5,10 @@ import { ActiveThemeProvider } from '../themes/active-theme';
 import QueryProvider from './query-provider';
 
 export default function Providers({
-  activeThemeValue,
+  activeThemeValue = 'default',
   children
 }: {
-  activeThemeValue: string;
+  activeThemeValue?: string;
   children: React.ReactNode;
 }) {
   return (
