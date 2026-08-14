@@ -1,6 +1,0 @@
-{
-  "name": "Nexora",
-  "description": "SaaS landing page hero section with interactive dashboard preview",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
