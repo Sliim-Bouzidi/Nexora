@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import {
   Rocket,
@@ -66,11 +65,9 @@ function MeteorLine({ delay = 0, repeatDelay = 5 }: { delay?: number; repeatDela
 function FeatureCard({
   feature,
   delay,
-  iconDelay,
 }: {
   feature: (typeof features)[number];
   delay: number;
-  iconDelay: number;
 }) {
   const Icon = feature.icon;
   return (
@@ -82,10 +79,7 @@ function FeatureCard({
       className="rounded-2xl border border-white/10 bg-white/[0.03] p-7"
     >
       <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-400">
-        <Icon
-          className="icon-draw h-5 w-5"
-          style={{ animationDuration: "5.5s", "--icon-delay": `${iconDelay}s` } as CSSProperties}
-        />
+        <Icon className="h-5 w-5" />
       </div>
       <h3 className="text-base font-semibold text-white mb-1.5">{feature.title}</h3>
       <p className="text-sm text-white/50 leading-relaxed">{feature.description}</p>
@@ -152,7 +146,7 @@ export function CoreFeaturesSection() {
 
         <div className="relative z-10 grid grid-cols-1 gap-6 md:grid-cols-3">
           {features.map((feature, idx) => (
-            <FeatureCard key={feature.title} feature={feature} delay={idx * 0.08} iconDelay={idx * 0.4} />
+            <FeatureCard key={feature.title} feature={feature} delay={idx * 0.08} />
           ))}
         </div>
       </motion.div>

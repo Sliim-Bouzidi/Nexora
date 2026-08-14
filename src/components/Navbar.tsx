@@ -20,7 +20,7 @@ export function Navbar() {
       <div
         className={`mx-auto flex items-center justify-between transition-all duration-500 ease-out ${
           scrolled
-            ? "mt-3 max-w-4xl rounded-full bg-background/55 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2.5"
+            ? "mt-3 max-w-4xl rounded-full bg-background/35 backdrop-blur-lg backdrop-saturate-150 shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2.5"
             : "mt-0 max-w-7xl rounded-none bg-background/80 backdrop-blur-md px-2 md:px-6 lg:px-14 py-4"
         }`}
       >
@@ -34,7 +34,7 @@ export function Navbar() {
         {/* Center/Right: Desktop Nav Links */}
         <nav
           className={`hidden md:flex items-center transition-all duration-500 ease-out ${
-            scrolled ? "gap-1 rounded-full bg-secondary/70 px-1.5 py-1.5" : "gap-8 px-0 py-0"
+            scrolled ? "gap-1" : "gap-8"
           }`}
         >
           <a
