@@ -17,8 +17,8 @@ services:
   nexora-dashboard:
     image: slimbouzidi/nexora-dashboard:latest
     container_name: nexora-dashboard
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
     environment:
       NODE_ENV: production
       PORT: 3001
