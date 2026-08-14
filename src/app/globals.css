@@ -1,120 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 210 14% 17%;
-  --primary: 210 14% 17%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 184 5% 55%;
-  --accent: 239 84% 67%;
-  --accent-foreground: 0 0% 100%;
-  --border: 0 0% 90%;
-  --ring: 239 84% 67%;
-  --radius: 0.5rem;
-  --shadow-dashboard: 0 25px 80px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.06);
-}
-
 @theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-border: hsl(var(--border));
-  --color-ring: hsl(var(--ring));
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(210 14% 17%);
+  --color-primary: hsl(210 14% 17%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(0 0% 96%);
+  --color-secondary-foreground: hsl(0 0% 9%);
+  --color-muted: hsl(0 0% 96%);
+  --color-muted-foreground: hsl(184 5% 55%);
+  --color-accent: hsl(239 84% 67%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-border: hsl(0 0% 90%);
+  --color-ring: hsl(239 84% 67%);
+  --radius: 0.5rem;
+
+  --font-body: var(--font-body);
+  --font-display: var(--font-display);
+
+  --animate-marquee: marquee-scroll 34s linear infinite;
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
+  }
+
+  @keyframes icon-draw {
+    0% {
+      stroke-dashoffset: 64;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    45% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    75% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    95% {
+      opacity: 0;
+    }
+    100% {
+      stroke-dashoffset: 64;
+      opacity: 0;
+    }
+  }
 }
 
-@layer utilities {
-  .font-display {
-    font-family: var(--font-display);
-  }
-  .font-body {
-    font-family: var(--font-body);
-  }
-  .font-heading {
-    font-family: var(--font-body);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-}
-
-body {
+@utility font-heading {
   font-family: var(--font-body);
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-25%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee-scroll 34s linear infinite;
-  will-change: transform;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
-@keyframes icon-draw {
-  0% {
+@utility icon-draw {
+  & path,
+  & circle,
+  & line,
+  & polyline,
+  & rect,
+  & polygon {
+    stroke-dasharray: 64;
     stroke-dashoffset: 64;
-    opacity: 0;
+    animation: icon-draw 3.4s ease-in-out infinite;
+    animation-delay: var(--icon-delay, 0s);
   }
-  10% {
-    opacity: 1;
-  }
-  45% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-  75% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-  95% {
-    opacity: 0;
-  }
-  100% {
-    stroke-dashoffset: 64;
-    opacity: 0;
-  }
-}
-
-.icon-draw path,
-.icon-draw circle,
-.icon-draw line,
-.icon-draw polyline,
-.icon-draw rect,
-.icon-draw polygon {
-  stroke-dasharray: 64;
-  stroke-dashoffset: 64;
-  animation: icon-draw 3.4s ease-in-out infinite;
-  animation-delay: var(--icon-delay, 0s);
-}
-
-.blog-hero-bg {
-  background-color: #eef1f8;
-  background-image: linear-gradient(
-    145deg,
-    #ffffff 0%,
-    #f6f7fc 22%,
-    #eaedf9 48%,
-    #dde3f4 72%,
-    #cfd7ef 100%
-  );
 }

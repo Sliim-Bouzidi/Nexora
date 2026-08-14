@@ -1,0 +1,2 @@
+# Ignore CSS from GitHub Linguist language statistics bar
+*.css linguist-vendored

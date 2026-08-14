@@ -87,7 +87,7 @@ export default function BlogPage() {
     <>
       <Navbar />
       <main className="flex-1 flex flex-col">
-        <section className="relative w-full overflow-hidden blog-hero-bg">
+        <section className="relative w-full overflow-hidden bg-[#eef1f8] bg-[linear-gradient(145deg,#ffffff_0%,#f6f7fc_22%,#eaedf9_48%,#dde3f4_72%,#cfd7ef_100%)]">
           <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-8 pt-16 md:pt-20 pb-24">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
