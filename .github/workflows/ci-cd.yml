@@ -61,11 +61,11 @@ jobs:
       - name: Deploy with Docker Compose
         run: docker compose -p nexora up -d --build --remove-orphans
 
-      # The deployment is successful only when the running VM responds on port 3000.
+      # The deployment is successful only when Nginx responds on the VM's HTTP port.
       - name: Verify deployed application
         run: |
           for attempt in {1..10}; do
-            if curl --fail --silent --show-error http://localhost:3000 > /dev/null; then
+            if curl --fail --silent --show-error http://localhost > /dev/null; then
               echo "Deployment health check passed."
               exit 0
             fi
