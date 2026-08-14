@@ -7,7 +7,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-sk_test_APnUT8y9QPz5keMq9zqjEeE8MP6oo7xti7VhHt0giU}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
       DATABASE_URL: ${DATABASE_URL:-postgresql://nexora:nexorapassword@postgres:5432/nexora_cms}
     depends_on:
       postgres:
@@ -22,8 +22,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_test_cGVyZmVjdC1zdW5maXNoLTcyLmNsZXJrLmFjY291bnRzLmRldiQ}
-      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-sk_test_APnUT8y9QPz5keMq9zqjEeE8MP6oo7xti7VhHt0giU}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
     restart: unless-stopped
 
   nginx:
