@@ -8,6 +8,7 @@ export interface BlogPost {
   badge?: string;
   badgeClass?: string;
   image: string;
+  thumbnail?: string;
   publishDate: string;
   author: {
     name: string;
