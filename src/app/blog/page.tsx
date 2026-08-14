@@ -1,87 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
+import { ALL_BLOG_POSTS, BlogPost } from "../../data/blog-data";
 
-const categories = ["All", "Interviews", "Inspiration", "Updates", "Product", "Miscellaneous"];
-
-const posts = [
-  {
-    title: "Create and deploy an agent with Nexora",
-    category: "Updates",
-    excerpt:
-      "In this post, we share the technical details behind our agent orchestration engine, and how teams use real-time signals to keep automations accurate, safe, and fast.",
-    author: {
-      name: "Mark Cruppet",
-      avatar:
-        "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-  {
-    title: "Getting started with Nexora",
-    category: "Product",
-    excerpt:
-      "A walkthrough of your first hour with Nexora — connecting data sources, wiring up a workflow, and shipping your first autonomous agent to production.",
-    author: {
-      name: "Alexandra Moore",
-      avatar:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-  {
-    title: "How to identify high-intent leads with agent workflows",
-    category: "Inspiration",
-    excerpt:
-      "From lead scoring to outreach sequencing, here's how growth teams use Nexora agents to surface the accounts most likely to convert this quarter.",
-    author: {
-      name: "Alexandra Moore",
-      avatar:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-  {
-    title: "Why we think autonomous agents are good for developers",
-    category: "Interviews",
-    excerpt:
-      "We sat down with three engineering leads to talk about what changed on their team once repetitive review and ops work moved to agents.",
-    author: {
-      name: "Mark Cruppet",
-      avatar:
-        "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-  {
-    title: "5 lessons from scaling agent infrastructure",
-    category: "Miscellaneous",
-    excerpt:
-      "What broke, what held up, and what we'd do differently — notes from taking our orchestration layer from a handful of workflows to thousands.",
-    author: {
-      name: "Owen Park",
-      avatar:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-  {
-    title: "Inside our design system for agent dashboards",
-    category: "Product",
-    excerpt:
-      "How we designed a component library that stays legible whether you're monitoring one agent or a thousand running in parallel.",
-    author: {
-      name: "Owen Park",
-      avatar:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80",
-    },
-  },
-];
+const categories = ["All", "Interviews", "Inspiration", "Updates", "Product", "Tools"];
 
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [posts, setPosts] = useState<BlogPost[]>(ALL_BLOG_POSTS);
+
+  useEffect(() => {
+    fetch("/api/articles")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          // Only show published articles on website
+          const published = data.filter((a) => a.status !== "Draft");
+          setPosts(published);
+        }
+      })
+      .catch((err) => console.error("Could not fetch articles API, using static data:", err));
+  }, []);
 
   const filteredPosts =
-    activeCategory === "All" ? posts : posts.filter((post) => post.category === activeCategory);
+    activeCategory === "All"
+      ? posts
+      : posts.filter((post) => post.category === activeCategory);
 
   return (
     <>
@@ -133,39 +82,41 @@ export default function BlogPage() {
 
             <div className="mt-14 flex flex-col gap-12 md:gap-14">
               {filteredPosts.map((post, idx) => (
-                <motion.a
-                  key={post.title}
-                  href="#"
+                <motion.div
+                  key={post.slug || post.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: idx * 0.06, ease: "easeOut" }}
-                  className="group flex flex-col gap-3 border-l-2 border-border/70 pl-6 hover:border-accent transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={post.author.avatar}
-                      alt=""
-                      referrerPolicy="no-referrer"
-                      className="h-7 w-7 rounded-full object-cover"
-                    />
-                    <span className="text-sm text-muted-foreground font-medium">
-                      {post.author.name}
-                    </span>
-                  </div>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group flex flex-col gap-3 border-l-2 border-border/70 pl-6 hover:border-accent transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={typeof post.author === 'string' ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80' : post.author?.avatar}
+                        alt=""
+                        className="h-7 w-7 rounded-full object-cover"
+                      />
+                      <span className="text-sm font-semibold text-foreground">
+                        {typeof post.author === 'string' ? post.author : post.author?.name}
+                      </span>
+                    </div>
 
-                  <h3 className="font-heading text-xl md:text-2xl text-foreground tracking-tight leading-snug group-hover:text-accent transition-colors">
-                    {post.title}
-                  </h3>
+                    <h2 className="font-heading text-2xl md:text-3xl text-foreground font-bold tracking-tight group-hover:text-accent transition-colors">
+                      {post.title}
+                    </h2>
 
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
-                    {post.excerpt}
-                  </p>
+                    <p className="text-sm md:text-base text-muted-foreground max-w-2xl leading-relaxed">
+                      {post.excerpt}
+                    </p>
 
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent w-fit group-hover:gap-2.5 transition-all">
-                    Read more <ArrowRight className="h-4 w-4" />
-                  </span>
-                </motion.a>
+                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-accent pt-1">
+                      Read more <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </motion.div>
               ))}
             </div>
           </div>
