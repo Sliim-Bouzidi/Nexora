@@ -1,6 +1,6 @@
 services:
   nexora:
-    image: slimbouzidi/nexora:latest
+    image: ${DOCKERHUB_USERNAME:-slimbouzidi}/nexora:latest
     container_name: nexora
     expose:
       - "3000"
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   nexora-dashboard:
-    image: slimbouzidi/nexora-dashboard:latest
+    image: ${DOCKERHUB_USERNAME:-slimbouzidi}/nexora-dashboard:latest
     container_name: nexora-dashboard
     expose:
       - "3001"
