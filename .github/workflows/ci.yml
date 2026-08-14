@@ -40,3 +40,28 @@ jobs:
 
       - name: Build image
         run: docker build -t nexora:${{ github.sha }} .
+
+  deploy:
+    name: Deploy to Ubuntu test VM
+    needs: [verify, docker]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Deploy with Docker Compose
+        run: docker compose -p nexora up -d --build --remove-orphans
+
+      - name: Verify deployed application
+        run: |
+          for attempt in {1..10}; do
+            if curl --fail --silent --show-error http://localhost:3000 > /dev/null; then
+              echo "Deployment health check passed."
+              exit 0
+            fi
+            sleep 3
+          done
+          docker compose -p nexora ps
+          docker compose -p nexora logs
+          exit 1
