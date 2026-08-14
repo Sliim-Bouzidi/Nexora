@@ -32,9 +32,9 @@ jobs:
       - name: Build application
         run: npm run build
 
-  # Build Docker image on GitHub Actions & push to Docker Hub
+  # Build Docker images on GitHub Actions & push to Docker Hub
   docker:
-    name: Build and push Docker image
+    name: Build and push Docker images
     needs: verify
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +50,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push image
+      - name: Build and push Nexora Main App image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -60,6 +60,17 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/nexora:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/nexora:${{ github.sha }}
+
+      - name: Build and push CMS Dashboard image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./dashboard
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          build-args: |
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:${{ github.sha }}
 
   # CD: runs only after CI succeeds for a push to main.
   deploy:

@@ -14,15 +14,29 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  nexora-dashboard:
+    image: slimbouzidi/nexora-dashboard:latest
+    container_name: nexora-dashboard
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_test_cGVyZmVjdC1zdW5maXNoLTcyLmNsZXJrLmFjY291bnRzLmRldiQ}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-sk_test_APnUT8y9QPz5keMq9zqjEeE8MP6oo7xti7VhHt0giU}
+    restart: unless-stopped
+
   nginx:
     image: nginx:1.27-alpine
     container_name: nexora-nginx
     ports:
       - "80:80"
+      - "3001:3001"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - nexora
+      - nexora-dashboard
     restart: unless-stopped
 
   postgres:
