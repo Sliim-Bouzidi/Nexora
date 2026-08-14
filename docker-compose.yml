@@ -1,7 +1,6 @@
 services:
   nexora:
-    build: .
-    image: nexora:1.0
+    image: slimbouzidi/nexora:latest
     container_name: nexora
     expose:
       - "3000"
