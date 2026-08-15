@@ -19,9 +19,9 @@ import { initialArticles, CATEGORY_OPTIONS } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import { toast } from 'sonner';
+import { getApiBaseUrl } from '@/lib/api-config';
 
-const API_BASE = 'http://localhost:3000/api/articles';
+const API_BASE = getApiBaseUrl();
 
 interface ArticleFormPageProps {
   articleId?: string;

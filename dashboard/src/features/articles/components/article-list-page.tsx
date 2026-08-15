@@ -17,9 +17,9 @@ import { Article } from '../types/article';
 import { initialArticles } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { getApiBaseUrl } from '@/lib/api-config';
 
-const API_BASE = 'http://localhost:3000/api/articles';
+const API_BASE = getApiBaseUrl();
 
 export default function ArticleListPage() {
   const router = useRouter();

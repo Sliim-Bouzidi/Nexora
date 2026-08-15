@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Article } from '../types/article';
 import { initialArticles } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
-import { useRouter } from 'next/navigation';
+import { getApiBaseUrl } from '@/lib/api-config';
 
-const API_BASE = 'http://localhost:3000/api/articles';
+const API_BASE = getApiBaseUrl();
 
 export default function ArticleReaderPage({ articleId }: { articleId: string }) {
   const router = useRouter();
