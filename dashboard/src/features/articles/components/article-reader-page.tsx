@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Article } from '../types/article';
 import { initialArticles } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
+import { useRouter } from 'next/navigation';
 import { getApiBaseUrl } from '@/lib/api-config';
 
 const API_BASE = getApiBaseUrl();
