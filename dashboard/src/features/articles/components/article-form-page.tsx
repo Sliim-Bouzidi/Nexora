@@ -392,7 +392,7 @@ export default function ArticleFormPage({ articleId }: ArticleFormPageProps) {
                     <div className="flex-1 overflow-hidden">
                       <Input
                         id="authorName"
-                        className="h-8 text-xs font-semibold"
+                        className="h-8 text-xs font-semibold bg-background shadow-none border-input/60 focus:border-ring focus:ring-1"
                         value={authorName}
                         onChange={(e) => setAuthorName(e.target.value)}
                       />

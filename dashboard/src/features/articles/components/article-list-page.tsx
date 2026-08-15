@@ -223,28 +223,36 @@ export default function ArticleListPage() {
                         {article.publishDate}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1">
                           <Button
-                            variant="outline"
-                            size="sm"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
                             onClick={() => router.push(`/dashboard/articles/${article.id}/read`)}
+                            title="Read Blog Post"
                           >
-                            Read Blog
-                          </Button>
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => router.push(`/dashboard/articles/${article.id}/edit`)}
-                          >
-                            Edit
+                            <Icons.eye className="h-4 w-4" />
+                            <span className="sr-only">Read Blog Post</span>
                           </Button>
                           <Button
                             variant="ghost"
-                            size="sm"
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => handleDelete(article.id)}
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                            onClick={() => router.push(`/dashboard/articles/${article.id}/edit`)}
+                            title="Edit Article"
                           >
-                            Delete
+                            <Icons.edit className="h-4 w-4" />
+                            <span className="sr-only">Edit Article</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive/80 hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => handleDelete(article.id)}
+                            title="Delete Article"
+                          >
+                            <Icons.trash className="h-4 w-4" />
+                            <span className="sr-only">Delete Article</span>
                           </Button>
                         </div>
                       </TableCell>
