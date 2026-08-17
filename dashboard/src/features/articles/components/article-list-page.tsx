@@ -244,24 +244,20 @@ export default function ArticleListPage() {
                             Read Blog
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1 text-xs"
                             onClick={() => router.push(`/dashboard/articles/${article.id}/edit`)}
-                            title="Edit Article"
                           >
-                            <Icons.edit className="h-4 w-4" />
-                            <span className="sr-only">Edit Article</span>
+                            Edit
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-destructive/80 hover:text-destructive hover:bg-destructive/10"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
                             onClick={() => setArticleToDelete(article.id)}
-                            title="Delete Article"
                           >
-                            <Icons.trash className="h-4 w-4" />
-                            <span className="sr-only">Delete Article</span>
+                            Delete
                           </Button>
                         </div>
                       </TableCell>
