@@ -245,19 +245,21 @@ export default function ArticleListPage() {
                           </Button>
                           <Button
                             variant="outline"
-                            size="sm"
-                            className="h-8 gap-1 text-xs"
+                            size="icon"
+                            className="h-8 w-8"
                             onClick={() => router.push(`/dashboard/articles/${article.id}/edit`)}
+                            title="Edit article"
                           >
-                            Edit
+                            <Icons.edit className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="outline"
-                            size="sm"
-                            className="h-8 gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
                             onClick={() => setArticleToDelete(article.id)}
+                            title="Delete article"
                           >
-                            Delete
+                            <Icons.trash className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
