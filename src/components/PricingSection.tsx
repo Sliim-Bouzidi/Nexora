@@ -44,7 +44,7 @@ export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true);
 
   return (
-    <section id="pricing" className="w-full py-24 bg-secondary/20 border-y border-border/60">
+    <section id="pricing" className="w-full py-24 bg-secondary/20">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <motion.span
