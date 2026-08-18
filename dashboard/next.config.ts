@@ -3,6 +3,7 @@ import { withSentryConfig } from '@sentry/nextjs';
 
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/dashboard' : '',
   typescript: {
     ignoreBuildErrors: true
   },
