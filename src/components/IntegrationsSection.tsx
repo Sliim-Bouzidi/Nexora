@@ -151,7 +151,7 @@ export function IntegrationsSection() {
               key={idx}
               d={d}
               fill="none"
-              stroke="hsl(var(--accent))"
+              stroke="var(--color-accent, #6366f1)"
               strokeWidth="0.35"
               strokeLinecap="round"
               opacity={0.5}
@@ -284,17 +284,17 @@ export function IntegrationsSection() {
           >
             <svg viewBox="0 0 280 208" className="absolute inset-0 h-full w-full" fill="none">
               {leftNodes.map((node) => (
-                <path key={`base-l-${node.slug}`} d={pathFor(node, "left")} stroke="hsl(var(--border))" strokeWidth="1.5" />
+                <path key={`base-l-${node.slug}`} d={pathFor(node, "left")} stroke="var(--color-border, #e2e8f0)" strokeWidth="1.5" />
               ))}
               {rightNodes.map((node) => (
-                <path key={`base-r-${node.slug}`} d={pathFor(node, "right")} stroke="hsl(var(--border))" strokeWidth="1.5" />
+                <path key={`base-r-${node.slug}`} d={pathFor(node, "right")} stroke="var(--color-border, #e2e8f0)" strokeWidth="1.5" />
               ))}
 
               {leftNodes.map((node) => (
                 <motion.path
                   key={`flow-l-${node.slug}`}
                   d={pathFor(node, "left")}
-                  stroke="hsl(var(--accent))"
+                  stroke="var(--color-accent, #6366f1)"
                   strokeWidth="1.5"
                   strokeDasharray="3 7"
                   strokeLinecap="round"
@@ -307,7 +307,7 @@ export function IntegrationsSection() {
                 <motion.path
                   key={`flow-r-${node.slug}`}
                   d={pathFor(node, "right")}
-                  stroke="hsl(var(--accent))"
+                  stroke="var(--color-accent, #6366f1)"
                   strokeWidth="1.5"
                   strokeDasharray="3 7"
                   strokeLinecap="round"
@@ -324,7 +324,7 @@ export function IntegrationsSection() {
                 const count = clicks[key] ?? 0;
                 if (count === 0) return null;
                 return (
-                  <circle key={`pulse-${key}-${count}`} r="4.5" fill="hsl(var(--accent))">
+                  <circle key={`pulse-${key}-${count}`} r="4.5" fill="var(--color-accent, #6366f1)">
                     <animateMotion dur="0.75s" fill="freeze" path={pathFor(node, side)} />
                   </circle>
                 );

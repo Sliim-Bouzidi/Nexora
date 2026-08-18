@@ -243,8 +243,8 @@ export function DashboardPreview() {
                     >
                       <defs>
                         <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.15" />
-                          <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                          <stop offset="0%" stopColor="var(--color-accent, #6366f1)" stopOpacity="0.15" />
+                          <stop offset="100%" stopColor="var(--color-accent, #6366f1)" stopOpacity="0" />
                         </linearGradient>
                       </defs>
                       {/* Gradient Fill */}
@@ -256,7 +256,7 @@ export function DashboardPreview() {
                       <path
                         d="M 0 45 C 30 40, 60 18, 90 28 C 120 38, 150 12, 180 22 C 210 32, 240 8, 270 14 C 285 17, 295 10, 300 12"
                         fill="none"
-                        stroke="hsl(var(--accent))"
+                        stroke="var(--color-accent, #6366f1)"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                       />

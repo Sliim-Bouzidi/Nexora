@@ -24,7 +24,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="about" className="relative w-full border-y border-border/60 py-24">
+    <section id="about" className="relative w-full border-t border-border/60 py-24">
       <div className="relative max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         {/* Corner dots framing the section, like a canvas selection */}
         <span className="absolute -top-2.5 -left-1 h-[7px] w-[7px] rounded-full border border-border bg-background" />
@@ -72,7 +72,7 @@ export function HowItWorksSection() {
             <path
               d="M 180 20 Q 330 90 500 20"
               fill="none"
-              stroke="hsl(var(--accent))"
+              stroke="var(--color-accent, #6366f1)"
               strokeWidth="2"
               strokeDasharray="6 8"
               strokeLinecap="round"
@@ -81,7 +81,7 @@ export function HowItWorksSection() {
             <path
               d="M 500 20 Q 670 90 820 20"
               fill="none"
-              stroke="hsl(var(--accent))"
+              stroke="var(--color-accent, #6366f1)"
               strokeWidth="2"
               strokeDasharray="6 8"
               strokeLinecap="round"

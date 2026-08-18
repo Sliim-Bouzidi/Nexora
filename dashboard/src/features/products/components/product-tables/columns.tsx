@@ -13,14 +13,15 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: 'photo_url',
     header: 'IMAGE',
     cell: ({ row }) => {
+      const photoUrl = (row.getValue('photo_url') as string) || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150';
       return (
-        <div className='relative aspect-square'>
+        <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-muted border'>
           <Image
-            src={row.getValue('photo_url')}
-            alt={row.getValue('name')}
+            src={photoUrl}
+            alt={row.getValue('name') || 'Product'}
             fill
-            sizes='80px'
-            className='rounded-lg'
+            sizes='48px'
+            className='object-cover'
           />
         </div>
       );
