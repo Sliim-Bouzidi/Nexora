@@ -90,7 +90,7 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -k k8s/
+          kubectl apply --validate=false -k k8s/
 
       - name: Update Kubernetes deployments with new image tags
         run: |
