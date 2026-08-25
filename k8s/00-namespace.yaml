@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nexora
+  labels:
+    app.kubernetes.io/name: nexora
+    app.kubernetes.io/part-of: nexora-stack

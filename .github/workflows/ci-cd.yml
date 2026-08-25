@@ -92,31 +92,32 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Clean up unused Docker resources on runner
-        run: docker system prune -af
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -k k8s/
 
-      - name: Pull latest Docker images
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        run: docker compose -p nexora pull
+      - name: Update Kubernetes deployments with new image tags
+        run: |
+          kubectl set image deployment/nexora-landing nexora-landing=${{ secrets.DOCKERHUB_USERNAME }}/nexora:${{ github.sha }} -n nexora
+          kubectl set image deployment/nexora-dashboard nexora-dashboard=${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:${{ github.sha }} -n nexora
 
-      - name: Deploy with Docker Compose
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-        run: docker compose -p nexora up -d --force-recreate --remove-orphans
+      - name: Wait for zero-downtime rolling update
+        run: |
+          kubectl rollout status deployment/nexora-landing -n nexora --timeout=120s
+          kubectl rollout status deployment/nexora-dashboard -n nexora --timeout=120s
 
-      - name: Verify deployed application
+      - name: Verify deployed application health
         run: |
           for attempt in {1..15}; do
             if curl --fail --silent --show-error http://localhost > /dev/null; then
-              echo "Deployment health check passed."
+              echo "Kubernetes deployment health check passed."
               exit 0
             fi
-            echo "Attempt $attempt: Waiting for upstream application to respond..."
+            echo "Attempt $attempt: Waiting for ingress endpoint to respond..."
             sleep 3
           done
-          docker compose -p nexora ps
-          docker compose -p nexora logs
+          kubectl get pods,svc,ingress -n nexora
+          kubectl logs -l app=nexora-landing -n nexora --tail=50
+          kubectl logs -l app=nexora-dashboard -n nexora --tail=50
           exit 1
+

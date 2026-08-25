@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexora-config
+  namespace: nexora
+  labels:
+    app.kubernetes.io/name: nexora-config
+    app.kubernetes.io/part-of: nexora-stack
+data:
+  NODE_ENV: "production"
+  POSTGRES_USER: "nexora"
+  POSTGRES_DB: "nexora_cms"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/auth/sign-in"
+  NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/auth/sign-up"
+  NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: "/dashboard/overview"
+  NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: "/dashboard/overview"
+  NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL: "/dashboard/overview"
+  NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL: "/dashboard/overview"
