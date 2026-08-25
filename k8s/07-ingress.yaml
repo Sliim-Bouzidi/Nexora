@@ -37,8 +37,15 @@ spec:
                 port:
                   number: 3000
 
-          # Dashboard API routes (products, users)
-          - path: /api
+          # Dashboard API routes
+          - path: /api/products
+            pathType: Prefix
+            backend:
+              service:
+                name: nexora-dashboard-service
+                port:
+                  number: 3001
+          - path: /api/users
             pathType: Prefix
             backend:
               service:
