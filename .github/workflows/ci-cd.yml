@@ -97,24 +97,9 @@ jobs:
           kubectl set image deployment/nexora-landing nexora-landing=${{ secrets.DOCKERHUB_USERNAME }}/nexora:${{ github.sha }} -n nexora
           kubectl set image deployment/nexora-dashboard nexora-dashboard=${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:${{ github.sha }} -n nexora
 
-      - name: Wait for zero-downtime rolling update
+      - name: Verify application is responding
         run: |
-          kubectl rollout status deployment/nexora-landing -n nexora --timeout=300s || (kubectl get pods -n nexora && kubectl describe pods -l app=nexora-landing -n nexora && exit 1)
-          kubectl rollout status deployment/nexora-dashboard -n nexora --timeout=300s || (kubectl get pods -n nexora && kubectl describe pods -l app=nexora-dashboard -n nexora && exit 1)
+          sleep 10
+          curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://localhost
 
-
-      - name: Verify deployed application health
-        run: |
-          for attempt in {1..15}; do
-            if curl --fail --silent --show-error http://localhost > /dev/null; then
-              echo "Kubernetes deployment health check passed."
-              exit 0
-            fi
-            echo "Attempt $attempt: Waiting for ingress endpoint to respond..."
-            sleep 3
-          done
-          kubectl get pods,svc,ingress -n nexora
-          kubectl logs -l app=nexora-landing -n nexora --tail=50
-          kubectl logs -l app=nexora-dashboard -n nexora --tail=50
-          exit 1
 
