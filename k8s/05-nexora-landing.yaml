@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: nexora-landing
     app.kubernetes.io/part-of: nexora-stack
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nexora-landing

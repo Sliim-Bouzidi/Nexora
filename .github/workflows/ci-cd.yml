@@ -92,6 +92,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Clean up unused container images and evicted pods
+        run: |
+          sudo crictl rmi --prune || true
+          docker system prune -af || true
+          kubectl delete pods --field-selector=status.phase=Failed -n nexora || true
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -k k8s/
