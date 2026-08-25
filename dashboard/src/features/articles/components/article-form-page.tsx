@@ -19,6 +19,7 @@ import { initialArticles, CATEGORY_OPTIONS } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
+import { toast } from 'sonner';
 import { getApiBaseUrl } from '@/lib/api-config';
 
 const API_BASE = getApiBaseUrl();
