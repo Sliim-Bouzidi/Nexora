@@ -32,11 +32,20 @@ jobs:
       - name: Build application
         run: npm run build
 
-  # Build Docker images on GitHub Actions & push to Docker Hub
+  # Build Docker images on GitHub Actions & push to Docker Hub (Parallel)
   docker:
-    name: Build and push Docker images
+    name: Build & push ${{ matrix.name }}
     needs: verify
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: Nexora Main App
+            context: .
+            image: nexora
+          - name: CMS Dashboard
+            context: ./dashboard
+            image: nexora-dashboard
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
@@ -50,31 +59,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push Nexora Main App image
+      - name: Build and push ${{ matrix.name }} image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ matrix.context }}
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           build-args: |
             NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/nexora:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/nexora:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push CMS Dashboard image
-        uses: docker/build-push-action@v6
-        with:
-          context: ./dashboard
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          build-args: |
-            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
 
   # CD: runs only after CI succeeds for a push to main.
   deploy:
