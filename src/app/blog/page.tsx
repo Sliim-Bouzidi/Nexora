@@ -6,31 +6,39 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
-import { ALL_BLOG_POSTS, BlogPost } from "../../data/blog-data";
+import type { BlogPost } from "../../data/blog-data";
 
 const categories = ["All", "Interviews", "Inspiration", "Updates", "Product", "Tools"];
 
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [posts, setPosts] = useState<BlogPost[]>(ALL_BLOG_POSTS);
+  const [posts, setPosts] = useState<BlogPost[] | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("/api/articles")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          // Only show published articles on website
+        if (Array.isArray(data)) {
           const published = data.filter((a) => a.status !== "Draft");
           setPosts(published);
+        } else {
+          throw new Error("Invalid response from articles API");
         }
       })
-      .catch((err) => console.error("Could not fetch articles API, using static data:", err));
+      .catch((err) => {
+        console.error("Articles API error:", err);
+        setError(true);
+      });
   }, []);
 
   const filteredPosts =
     activeCategory === "All"
-      ? posts
-      : posts.filter((post) => post.category === activeCategory);
+      ? (posts ?? [])
+      : (posts ?? []).filter((post) => post.category === activeCategory);
 
   return (
     <>
@@ -81,7 +89,31 @@ export default function BlogPage() {
             </motion.div>
 
             <div className="mt-14 flex flex-col gap-12 md:gap-14">
-              {filteredPosts.map((post, idx) => (
+              {error ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <p className="text-sm">Failed to load articles. Please try again later.</p>
+                </div>
+              ) : posts === null ? (
+                // Skeleton loading state — no flash of old data
+                <div className="flex flex-col gap-12 md:gap-14">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="border-l-2 border-border/70 pl-6 flex flex-col gap-3 animate-pulse">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-7 w-7 rounded-full bg-muted" />
+                        <div className="h-3 w-20 rounded bg-muted" />
+                      </div>
+                      <div className="h-7 w-3/4 rounded bg-muted" />
+                      <div className="h-4 w-full rounded bg-muted" />
+                      <div className="h-4 w-2/3 rounded bg-muted" />
+                    </div>
+                  ))}
+                </div>
+              ) : filteredPosts.length === 0 ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <p className="text-sm">No articles found in this category.</p>
+                </div>
+              ) : (
+                filteredPosts.map((post, idx) => (
                 <motion.div
                   key={post.slug || post.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -117,7 +149,8 @@ export default function BlogPage() {
                     </div>
                   </Link>
                 </motion.div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </section>

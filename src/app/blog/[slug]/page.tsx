@@ -18,29 +18,38 @@ import {
 } from "lucide-react";
 import { Navbar } from "../../../components/Navbar";
 import { Footer } from "../../../components/Footer";
-import { ALL_BLOG_POSTS, BlogPost } from "../../../data/blog-data";
+import type { BlogPost } from "../../../data/blog-data";
 
 export default function BlogPostDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [copied, setCopied] = useState(false);
-  const [post, setPost] = useState<BlogPost>(
-    ALL_BLOG_POSTS.find((p) => p.slug === slug) || ALL_BLOG_POSTS[0]
-  );
-  const [allPosts, setAllPosts] = useState<BlogPost[]>(ALL_BLOG_POSTS);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("/api/articles")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setAllPosts(data);
-          const found = data.find((p: any) => p.slug === slug || p.id === slug);
+          const found = data.find((p: BlogPost) => p.slug === slug || (p as any).id === slug);
           if (found) {
             setPost(found);
+          } else {
+            setError(true);
           }
+        } else {
+          throw new Error("Invalid response from articles API");
         }
       })
-      .catch((err) => console.error("Could not fetch article API:", err));
+      .catch((err) => {
+        console.error("Article API error:", err);
+        setError(true);
+      });
   }, [slug]);
 
   const relatedPosts = allPosts.filter((p) => p.slug !== post?.slug).slice(0, 3);
@@ -52,6 +61,54 @@ export default function BlogPostDetail({ params }: { params: Promise<{ slug: str
       setTimeout(() => setCopied(false), 2500);
     }
   };
+
+  // Loading state — no flash of stale data
+  if (!post && !error) {
+    return (
+      <>
+        <Navbar />
+        <main className="flex-1 flex flex-col bg-[#fbfbfd] dark:bg-background">
+          <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#f4f6fc] via-[#f8fafc] to-[#fbfbfd] dark:from-background dark:via-background dark:to-background pt-14 pb-16 border-b border-border/40">
+            <div className="max-w-5xl mx-auto px-6 md:px-8 animate-pulse">
+              <div className="h-4 w-32 rounded bg-muted mb-8" />
+              <div className="flex gap-3 mb-6">
+                <div className="h-6 w-24 rounded-full bg-muted" />
+                <div className="h-6 w-28 rounded bg-muted" />
+                <div className="h-6 w-20 rounded bg-muted" />
+              </div>
+              <div className="h-14 w-3/4 rounded bg-muted mb-4" />
+              <div className="h-14 w-1/2 rounded bg-muted mb-6" />
+              <div className="h-5 w-full rounded bg-muted mb-2" />
+              <div className="h-5 w-5/6 rounded bg-muted" />
+            </div>
+          </section>
+          <section className="max-w-5xl mx-auto px-6 md:px-8 -mt-10 z-10 w-full">
+            <div className="rounded-3xl overflow-hidden bg-muted aspect-[16/9] md:aspect-[21/9] animate-pulse" />
+          </section>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Error state
+  if (error || !post) {
+    return (
+      <>
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center bg-[#fbfbfd] dark:bg-background py-32">
+          <div className="text-center space-y-4">
+            <p className="text-lg font-semibold text-foreground">Article not found</p>
+            <p className="text-sm text-muted-foreground">This article may have been removed or is unavailable.</p>
+            <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline">
+              <ArrowLeft className="w-4 h-4" /> Back to Blog
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   const authorName = typeof post.author === "string" ? post.author : post.author?.name || "Ave";
   const authorRole = typeof post.author === "object" && post.author?.role ? post.author.role : "DevOps Lead";
