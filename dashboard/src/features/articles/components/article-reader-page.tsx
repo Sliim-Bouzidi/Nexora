@@ -5,7 +5,6 @@ import PageContainer from '@/components/layout/page-container';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Article } from '../types/article';
-import { initialArticles } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
 import { getApiBaseUrl } from '@/lib/api-config';
@@ -14,33 +13,88 @@ const API_BASE = getApiBaseUrl();
 
 export default function ArticleReaderPage({ articleId }: { articleId: string }) {
   const router = useRouter();
-  const [article, setArticle] = React.useState<Article>(
-    initialArticles.find((a) => a.id === articleId) || initialArticles[0]
-  );
+  const [article, setArticle] = React.useState<Article | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
 
-  // Fetch article dynamically from live API database
   React.useEffect(() => {
     async function loadArticle() {
       try {
         const res = await fetch(API_BASE);
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            const found = data.find((a: any) => a.id === articleId || a.slug === articleId);
-            if (found) {
-              setArticle(found);
-            }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const found = data.find((a: Article) => a.id === articleId || a.slug === articleId);
+          if (found) {
+            setArticle(found);
+          } else {
+            setError(true);
           }
+        } else {
+          throw new Error('Invalid API response');
         }
       } catch (err) {
-        console.warn('Falling back to local article state:', err);
+        console.error('Failed to load article:', err);
+        setError(true);
       } finally {
         setLoading(false);
       }
     }
     loadArticle();
   }, [articleId]);
+
+  // Loading skeleton — no flash of stale mock data
+  if (loading) {
+    return (
+      <PageContainer scrollable>
+        <div className="max-w-5xl mx-auto space-y-8 pb-16 animate-pulse">
+          <div className="flex items-center justify-between border-b pb-4">
+            <div className="h-8 w-36 rounded bg-muted" />
+            <div className="flex gap-3">
+              <div className="h-8 w-24 rounded-full bg-muted" />
+              <div className="h-8 w-28 rounded bg-muted" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex gap-3">
+              <div className="h-6 w-24 rounded-full bg-muted" />
+              <div className="h-6 w-28 rounded bg-muted" />
+            </div>
+            <div className="h-12 w-3/4 rounded bg-muted" />
+            <div className="h-12 w-1/2 rounded bg-muted" />
+            <div className="h-5 w-full rounded bg-muted" />
+            <div className="h-5 w-5/6 rounded bg-muted" />
+          </div>
+          <div className="w-full h-[340px] rounded-2xl bg-muted" />
+        </div>
+      </PageContainer>
+    );
+  }
+
+  // Error / not found state
+  if (error || !article) {
+    return (
+      <PageContainer scrollable>
+        <div className="max-w-5xl mx-auto space-y-8 pb-16">
+          <div className="flex items-center justify-between border-b pb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push('/dashboard/articles')}
+              className="gap-2"
+            >
+              <Icons.chevronLeft className="w-4 h-4" />
+              Back to Articles List
+            </Button>
+          </div>
+          <div className="flex flex-col items-center justify-center py-24 text-center space-y-3">
+            <p className="text-lg font-semibold text-foreground">Article not found</p>
+            <p className="text-sm text-muted-foreground">This article may have been removed or is unavailable.</p>
+          </div>
+        </div>
+      </PageContainer>
+    );
+  }
 
   const authorName = typeof article.author === 'string' ? article.author : article.author?.name || 'Ave';
   const authorAvatar = typeof article.author === 'object' && article.author?.avatar ? article.author.avatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80';

@@ -24,7 +24,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Article } from '../types/article';
-import { initialArticles } from '../constants/mock-articles';
 import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -40,24 +39,21 @@ export default function ArticleListPage() {
   const [loading, setLoading] = React.useState(true);
   const [articleToDelete, setArticleToDelete] = React.useState<string | null>(null);
 
-  // Fetch articles directly from real database API
   const fetchArticles = React.useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(API_BASE);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setArticles(data);
-        } else {
-          setArticles(initialArticles);
-        }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setArticles(data);
       } else {
-        setArticles(initialArticles);
+        throw new Error('Invalid API response');
       }
     } catch (err) {
-      console.warn('API database unreached, using local fallback:', err);
-      setArticles(initialArticles);
+      console.error('Failed to load articles from database:', err);
+      toast.error('Failed to load articles. Please check your connection.');
+      setArticles([]);
     } finally {
       setLoading(false);
     }
