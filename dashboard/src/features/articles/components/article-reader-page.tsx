@@ -47,9 +47,9 @@ export default function ArticleReaderPage({ articleId }: { articleId: string }) 
   if (loading) {
     return (
       <PageContainer scrollable>
-        <div className="max-w-5xl mx-auto space-y-8 pb-16 animate-pulse">
+        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 animate-pulse">
 
-          {/* Top Control Bar — matches: back button left, badge + button right */}
+          {/* Top Control Bar */}
           <div className="flex items-center justify-between border-b pb-4">
             <div className="h-8 w-40 rounded-md bg-muted" />
             <div className="flex items-center gap-3">
@@ -60,26 +60,26 @@ export default function ArticleReaderPage({ articleId }: { articleId: string }) 
 
           {/* Article Header */}
           <div className="space-y-5">
-            {/* Category badge + date + readtime */}
+            {/* Category + date + readtime */}
             <div className="flex items-center gap-3">
               <div className="h-6 w-28 rounded-full bg-muted" />
               <div className="h-4 w-24 rounded bg-muted" />
               <div className="h-4 w-20 rounded bg-muted" />
             </div>
 
-            {/* Title — text-5xl, 2 lines */}
+            {/* Title — full width, 2 lines */}
             <div className="space-y-3">
               <div className="h-12 w-full rounded bg-muted" />
               <div className="h-12 w-4/5 rounded bg-muted" />
             </div>
 
-            {/* Excerpt — text-xl, 2 lines */}
+            {/* Excerpt — full width, 2 lines */}
             <div className="space-y-2">
               <div className="h-6 w-full rounded bg-muted" />
               <div className="h-6 w-3/4 rounded bg-muted" />
             </div>
 
-            {/* Author row — avatar + name + role */}
+            {/* Author row */}
             <div className="flex items-center gap-3.5 pt-2 border-t border-border/60">
               <div className="w-12 h-12 rounded-full bg-muted shrink-0" />
               <div className="space-y-1.5">
@@ -89,16 +89,19 @@ export default function ArticleReaderPage({ articleId }: { articleId: string }) 
             </div>
           </div>
 
-          {/* Featured image — matches h-[340px] sm:h-[480px] */}
-          <div className="w-full h-[340px] sm:h-[480px] rounded-2xl bg-muted" />
+          {/* Featured image — full width, same height as real */}
+          <div className="relative w-full h-[340px] sm:h-[480px] rounded-2xl bg-muted" />
 
-          {/* Article body card */}
-          <div className="rounded-2xl border bg-card p-6 sm:p-12 space-y-4">
+          {/* Article body card — full width */}
+          <div className="w-full rounded-2xl border bg-card p-6 sm:p-12 space-y-4">
+            <div className="h-8 w-1/2 rounded bg-muted" />
             <div className="h-5 w-full rounded bg-muted" />
             <div className="h-5 w-full rounded bg-muted" />
             <div className="h-5 w-4/5 rounded bg-muted" />
             <div className="h-5 w-full rounded bg-muted" />
             <div className="h-5 w-3/4 rounded bg-muted" />
+            <div className="h-5 w-full rounded bg-muted" />
+            <div className="h-5 w-2/3 rounded bg-muted" />
           </div>
 
         </div>
