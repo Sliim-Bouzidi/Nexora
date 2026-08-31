@@ -42,10 +42,28 @@ next-env.d.ts
 # clerk configuration (can include secrets)
 /.clerk/
 
-
-# cursor 
+# Editor & IDE
+.vscode/
+.cursor/
 .cursorrules
-/memory-bank
+
+# Agent/AI tooling
+.agents/
+.claude/
+CLAUDE.md
+AGENTS.md
+memory-bank/
+
+# Git hooks
+.husky/
+
+# Docs and scripts (not needed in CI/CD)
+docs/
+scripts/
+
+# misc lock files
+bun.lock
+skills-lock.json
 
 # Sentry Config File
 .env.sentry-build-plugin
