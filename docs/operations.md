@@ -70,7 +70,17 @@ sudo ./svc.sh restart
 
 ## Rollback
 
-Because every image is tagged with its commit SHA, rollback doesn't require rebuilding anything — just point the deployments at the previous known-good SHA:
+**Fastest — undo the last rollout.** Kubernetes keeps the previous ReplicaSet, so this returns to the image that was running before the last deploy:
+
+```bash
+kubectl rollout undo deployment/nexora-landing -n nexora
+kubectl rollout undo deployment/nexora-dashboard -n nexora
+
+# See which revisions exist / roll back further with --to-revision=<n>
+kubectl rollout history deployment/nexora-landing -n nexora
+```
+
+**To a specific version.** Because every image is tagged with its commit SHA, rollback doesn't require rebuilding anything — just point the deployments at the previous known-good SHA:
 
 ```bash
 # Find the previous good commit SHA

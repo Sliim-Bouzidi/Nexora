@@ -20,8 +20,9 @@ flowchart TB
     subgraph CD["CD — self-hosted runner"]
         Apply[kubectl apply -k k8s/]
         RollOut[kubectl set image ... :sha]
+        Wait[kubectl rollout status]
         Health[curl health check]
-        Apply --> RollOut --> Health
+        Apply --> RollOut --> Wait --> Health
     end
 
     Build --> Apply
@@ -123,7 +124,7 @@ Defined in [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml), three s
 
 1. **Verify** (GitHub-hosted runner): `npm ci` + `npm run build` — fails fast on any build-breaking change, on every push and PR to `main`.
 2. **Build & push** (GitHub-hosted runner, parallel matrix): builds the landing and dashboard Docker images independently, tags each with both `latest` and the commit SHA, pushes to Docker Hub. Only runs after Verify succeeds.
-3. **Deploy** (self-hosted runner on the target Ubuntu/Kubernetes host, `main` pushes only): applies `k8s/` via Kustomize, then `kubectl set image` rolls both deployments to the new commit-SHA-tagged image, then health-checks the site over HTTP.
+3. **Deploy** (self-hosted runner on the target Ubuntu/Kubernetes host, `main` pushes only): applies `k8s/` via Kustomize, then `kubectl set image` rolls both deployments to the new commit-SHA-tagged image, waits for `kubectl rollout status` to confirm the new pods are ready (fails the job if they crash or the image can't be pulled), then health-checks the site over HTTP.
 
 Deploying by commit SHA (not just `latest`) is what makes rollback possible — see [docs/operations.md](docs/operations.md#rollback).
 
