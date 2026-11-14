@@ -94,21 +94,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Apply Kubernetes manifests
+      # Pin both images to this commit's SHA in the manifests, then apply once.
+      # (Applying ":latest" and then running "kubectl set image" caused two rollouts per deploy.)
+      - name: Apply Kubernetes manifests with new image tags
         run: |
+          sed -i "s/newTag: latest/newTag: ${{ github.sha }}/" k8s/kustomization.yaml
           kubectl apply --validate=false -k k8s/
-
-      - name: Update Kubernetes deployments with new image tags
-        run: |
-          kubectl set image deployment/nexora-landing nexora-landing=${{ secrets.DOCKERHUB_USERNAME }}/nexora:${{ github.sha }} -n nexora
-          kubectl set image deployment/nexora-dashboard nexora-dashboard=${{ secrets.DOCKERHUB_USERNAME }}/nexora-dashboard:${{ github.sha }} -n nexora
 
       # Fails the job if the new pods don't become ready (e.g. crash loop, bad image tag),
       # instead of letting the old pods answer the health check below.
       - name: Wait for rollout to finish
         run: |
-          kubectl rollout status deployment/nexora-landing -n nexora --timeout=180s
-          kubectl rollout status deployment/nexora-dashboard -n nexora --timeout=180s
+          kubectl rollout status deployment/nexora-landing -n nexora --timeout=300s
+          kubectl rollout status deployment/nexora-dashboard -n nexora --timeout=300s
 
       - name: Verify application is responding
         run: |

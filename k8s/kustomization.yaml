@@ -11,3 +11,11 @@ resources:
   - 05-nexora-landing.yaml
   - 06-nexora-dashboard.yaml
   - 07-ingress.yaml
+
+# The CI/CD deploy job replaces "latest" with the commit SHA before applying,
+# so each push triggers exactly one rollout to an exact, rollback-able image.
+images:
+  - name: slimbouzidi/nexora
+    newTag: latest
+  - name: slimbouzidi/nexora-dashboard
+    newTag: latest
