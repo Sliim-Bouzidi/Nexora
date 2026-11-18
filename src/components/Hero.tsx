@@ -44,7 +44,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           className="text-center font-display text-5xl md:text-6xl lg:text-[5rem] leading-[0.95] tracking-tight text-foreground max-w-xl"
         >
-          The Future of <span className="italic font-normal">Smarter</span> Automation
+          The Future of <span className="italic font-normal">Smarter</span> Automationn
         </motion.h1>
 
         {/* 3. Subheadline */}
